@@ -11,15 +11,19 @@ export default function Login() {
 
   function handleSubmit(e) {
     e.preventDefault()
-    // demo password check
     if (!email || !password) {
       setError('Please enter email and password')
       return
     }
-    if (password !== 'password123') {
-      setError('Incorrect password')
+
+    // check against registered users in localStorage
+    const users = JSON.parse(localStorage.getItem('mf_users') || '[]')
+    const match = users.find(u => u.email === email && u.password === password)
+    if (!match) {
+      setError('Incorrect email or password')
       return
     }
+
     const user = { email, role }
     localStorage.setItem('mf_user', JSON.stringify(user))
     router.push('/dashboard')
